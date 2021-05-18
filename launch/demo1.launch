@@ -1,0 +1,28 @@
+<launch>
+
+  <!-- We launch the core reachy model and gazebo from reachy moveit config -->
+  <include file="$(find reachy_moveit_config)/launch/demo_gazebo.launch">
+    <arg name="urdf_path" value="$(find reachy_moveit_config)/urdf/reachy_moveit.urdf"/>
+    <arg name="rviz_config" value="$(find reachy_gazebo_grasp)/demo1.rviz"/>
+  </include>
+
+  <include file="$(find reachy_gazebo_grasp)/launch/spawn_camera.launch">
+  </include>
+
+    <include file="$(find reachy_gazebo_grasp)/launch/spawn_cube.launch">
+  </include>
+
+    <include file="$(find apriltag_ros)/launch/continuous_detection.launch">
+        <arg name="camera_name" value="/camera1/camera1" />
+        <arg name="camera_frame" value="/camera_link" />
+        <arg name="image_topic" value="image_raw" />
+        <arg name="settings_file" value="$(find rrbot)/config/settings.yaml"/>
+        <arg name="tags_file" value ="$(find rrbot)/config/tags.yaml"/>
+  </include>
+
+<node name="tag_pose_tf" pkg="reachy_gazebo_grasp" type="tag_pose_sub.py"
+	respawn="false" output="screen">
+</node> 
+
+
+</launch>
