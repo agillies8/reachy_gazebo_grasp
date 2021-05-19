@@ -2,9 +2,9 @@
 <launch>
  <group ns="camera1"> 
     <arg name="robot_name" value="camera1" />
-    <arg name="x" value="1.0" />
+    <arg name="x" value="0.5" />
     <arg name="y" value="0.0" />
-    <arg name="z" value="1.25" />
+    <arg name="z" value="2.25" />
     <arg name="roll" value="0.0"/>
     <arg name="pitch" value="1.6"/>
     <arg name="yaw" value="0.0" />
