@@ -1,15 +1,12 @@
 #!/usr/bin/env python3  
 import rospy
-
-# Because of transformations
 import tf_conversions
-
 import tf2_ros
 import geometry_msgs.msg
 import turtlesim.msg
 from apriltag_ros.msg import AprilTagDetection, AprilTagDetectionArray
 
-
+#build a tf broadcast message based on subscriber to the tag_detections topic that apriltag publishes to
 def handle_pose(msg):
     br = tf2_ros.TransformBroadcaster()
 

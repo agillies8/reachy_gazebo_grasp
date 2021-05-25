@@ -1,9 +1,5 @@
 #!/usr/bin/env python3  
 
-from __future__ import print_function
-from six.moves import input
-
-
 import tf2_ros
 import sys
 import copy
@@ -13,15 +9,7 @@ import moveit_msgs.msg
 import geometry_msgs.msg
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 from apriltag_ros.msg import AprilTagDetection, AprilTagDetectionArray
-
-
-try:
-  from math import pi, tau, dist, fabs, cos
-except: # For Python 2 compatibility
-  from math import pi, fabs, cos, sqrt
-  tau = 2.0*pi
-  def dist(p, q):
-    return sqrt(sum((p_i - q_i)**2.0 for p_i, q_i in zip(p,q)))
+from math import pi, tau, dist, fabs, cos
 from std_msgs.msg import String
 from moveit_commander.conversions import pose_to_list
 ## END_SUB_TUTORIAL
@@ -61,12 +49,8 @@ class MoveGroupPythonInterfaceTutorial(object):
   """MoveGroupPythonInterfaceTutorial"""
   def __init__(self):
 
-
-
     super(MoveGroupPythonInterfaceTutorial, self).__init__()
 
-    ## BEGIN_SUB_TUTORIAL setup
-    ##
     ## First initialize `moveit_commander`_ and a `rospy`_ node:
     moveit_commander.roscpp_initialize(sys.argv)
     rospy.init_node('move_group_python_interface_tutorial', anonymous=True)
@@ -95,10 +79,6 @@ class MoveGroupPythonInterfaceTutorial(object):
                                                    moveit_msgs.msg.DisplayTrajectory,
                                                    queue_size=20)
 
-    ## END_SUB_TUTORIAL
-
-    ## BEGIN_SUB_TUTORIAL basic_info
-    ##
     ## Getting Basic Information
     ## ^^^^^^^^^^^^^^^^^^^^^^^^^
     # We can get the name of the reference frame for this robot:
@@ -129,19 +109,18 @@ class MoveGroupPythonInterfaceTutorial(object):
     self.planning_frame = planning_frame
     self.eef_link = eef_link
     self.group_names = group_names
-
-
     self.tfBuffer = tf2_ros.Buffer()
     self.listener = tf2_ros.TransformListener(self.tfBuffer)
 
   def go_to_pose_goal(self, msg):
 
-
+    #initialize cube position and looping rate
     rate = rospy.Rate(10.0)
     cube_x = 0
     cube_y = 0
     cube_z = 0
 
+    #attempts to get the latest transform of the cube from world
     try:
       trans = self.tfBuffer.lookup_transform('world', 'cube2', rospy.Time(0))
       cube_x = trans.transform.translation.x
@@ -151,17 +130,21 @@ class MoveGroupPythonInterfaceTutorial(object):
     except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
       rate.sleep()
 
+    #prints the detected coordinates of the cube
     print("x")
     print(cube_x)
     print(cube_y)
     print(cube_z)
 
+    #loops thru the detected tags, and filters based on our pre-specificed tag (tag 2 in this case)
+    #this also fliters out cube poses that are roughly outside the robot arm workspace
     for a in msg.detections:
       if a.id[0] == 2 and \
        0.0 < cube_x < 0.75 and \
       0.0 < cube_y < 0.75 and \
       0.3 < cube_z < 1.0 :
 
+        #builds a pose goal based on the cube pose
         pose_goal = geometry_msgs.msg.Pose()
         pose_goal.position.x = cube_x 
         pose_goal.position.y = cube_y 
@@ -185,6 +168,7 @@ class MoveGroupPythonInterfaceTutorial(object):
         # Note: there is no equivalent function for clear_joint_value_targets()
         self.move_group.clear_pose_targets()
 
+#we start the node by initializing our move group interface object, and creating a subscriber that listens to the tag detections topic
 def main():
   try:
     tutorial = MoveGroupPythonInterfaceTutorial()
@@ -193,8 +177,6 @@ def main():
                      tutorial.go_to_pose_goal)
     rospy.spin()
     
-    
-
   except rospy.ROSInterruptException:
     return
   except KeyboardInterrupt:
