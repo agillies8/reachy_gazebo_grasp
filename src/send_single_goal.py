@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
 
-#based on: https://github.com/RethinkRobotics/baxter_examples/blob/master/scripts/joint_trajectory_client.py
+#this reads in a json string from a file (of a pre-recorded Moveit trajectory), and sends it to your controllers action server.
+#It is useful for sending single trajectories to your action server for general testing without having to run MoveIt.
+#It can also be used to send single pre-recorded trajectories to your controllers
+
+#based partly on: https://github.com/RethinkRobotics/baxter_examples/blob/master/scripts/joint_trajectory_client.py
 
 import sys
 import rospy
 import rospkg
-from std_msgs.msg import String
-
 
 import actionlib
-
-from copy import copy
 
 import json
 
 from control_msgs.msg import (
-    FollowJointTrajectoryActionGoal,
     FollowJointTrajectoryAction,
     FollowJointTrajectoryGoal,
 )
@@ -40,8 +39,10 @@ class Trajectory(object):
             rospy.signal_shutdown("Timed out waiting for Action Server")
             sys.exit(1)
 
+    #loads the data from the json file and populates the message we will later send
+    #the header stamp is added later, right before the message is sent
     def load(self, data_path):
-
+        
       with open( data_path, "r") as read_file:
         data = json.load(read_file)
       t = json.loads(data)
@@ -50,7 +51,9 @@ class Trajectory(object):
       self._goal.trajectory.joint_names = t['goal']['trajectory']['joint_names']
       self.add_points(t['goal']['trajectory']['points'])
 
+    #iterates thru the points array and populates the message
     def add_points(self, points):
+        
       for p in points:
         point = JointTrajectoryPoint()
         point.positions = p['positions']
@@ -60,6 +63,7 @@ class Trajectory(object):
         point.time_from_start.nsecs = p['time_from_start']['nsecs']
         self._goal.trajectory.points.append(point)
 
+    #adds the header and sends the goal to the server
     def start(self):
         self._goal.trajectory.header.stamp = rospy.Time.now()
         self._client.send_goal(self._goal)
@@ -94,6 +98,7 @@ def main():
 
     traj = Trajectory(controller_topic)
 
+    #creates the path to the json file we are going to read
     rospack = rospkg.RosPack()
     path = rospack.get_path('reachy_gazebo_grasp')
     data_path = "/data/"
