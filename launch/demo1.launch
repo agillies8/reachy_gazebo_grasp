@@ -1,5 +1,5 @@
 <launch>
-  <arg name="simulation" default="true"/>
+  <!-- <arg name="simulation" default="true"/> -->
 
   <!-- We launch the core reachy model, rviz config and gazebo world from reachy moveit config (seperate ROS package)-->
   <include file="$(find reachy_moveit_config)/launch/demo_gazebo.launch">
@@ -16,23 +16,23 @@
 
 
   <!-- We spawn the camera -->
-  <include file="$(find reachy_gazebo_grasp)/launch/spawn_camera.launch">
-  </include>
+  <!-- <include file="$(find reachy_gazebo_grasp)/launch/spawn_camera.launch">
+  </include> -->
 
 <!-- We spawn the cube  -->
-    <include file="$(find reachy_gazebo_grasp)/launch/spawn_cube.launch">
-  </include>
+    <!-- <include file="$(find reachy_gazebo_grasp)/launch/spawn_cube.launch">
+  </include> -->
 
 
   <include file="$(find colab_reachy_tf)/launch/tf.launch">
     <!-- <group if="$(arg simulation)"> -->
-      <arg name="camera_name" value="/camera/camera" />
+      <!-- <arg name="camera_name" value="/camera/camera" />
       <arg name="camera_frame" default="/camera_link" />
-      <arg name="image_topic" value="image_raw" />
+      <arg name="image_topic" value="image_raw" /> -->
     <!-- </group>
     <group unless="$(arg simulation)">
-      <arg name="camera_device" value="/dev/video2" />
     </group> -->
+    <arg name="camera_device" value="/dev/video2" />
     <arg name="use_rviz" value="false" />
 
   </include> 
