@@ -1,31 +1,24 @@
   
 <launch>
-<!--put the cube  nodes it its own namespace-->
-
-<group ns="cube2"> 
-    <!--config the cube args - these positions are used below to spawn the cube location-->
-
-    <arg name="robot_name" value="cube2" />
+<group ns="cube"> 
+    <arg name="robot_name" value="cube" />
     <arg name="x" value="0.5" />
     <arg name="y" value="0.5" />
     <arg name="z" value="0.5" />
     <arg name="roll" value="0"/>
     <arg name="pitch" value="0"/>
     <arg name="yaw" value="0.0" />
-    <arg name="robot_file" value="$(find reachy_gazebo_grasp)/urdf/cube2.urdf" />
+    <arg name="robot_file" value="$(find colab_reachy_approach)/urdf/cube.urdf" />
 
     <param name="robot_description" command="cat '$(arg robot_file)'"/>
 
-    <param name="tf_prefix" value="cube2"></param>
+    <param name="tf_prefix" value="cube"></param>
     <node name="$(arg robot_name)_spawn_urdf" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
     args="-file $(arg robot_file) -urdf -x $(arg x) -y $(arg y) -z $(arg z)  -R $(arg roll) -P $(arg pitch) -Y $(arg yaw) -model $(arg robot_name)"/>
 
-    <!--this static TF publisher establises the offset between the cube center and the tag frame "2"-->
+    <node pkg="tf" type="static_transform_publisher" name="cube_broadcaster" args=" 0 0 -0.0755 0 0 0 1 2 cube 100" />
 
-    <node pkg="tf" type="static_transform_publisher" name="cube2_broadcaster" args=" 0 0 -0.0755 0 0 0 1 2 cube2 100" />
-
-
-       <node name="my_jsp" pkg="joint_state_publisher" type="joint_state_publisher"/>
+    <node name="my_jsp" pkg="joint_state_publisher" type="joint_state_publisher"/>
     <node name="my_rsp" pkg="robot_state_publisher" type="robot_state_publisher"/>
     </group>
 </launch>
