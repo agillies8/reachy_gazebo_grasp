@@ -16,12 +16,12 @@
 
 
   <!-- We spawn the camera -->
-  <!-- <include file="$(find reachy_gazebo_grasp)/launch/spawn_camera.launch">
-  </include> -->
+  <include file="$(find reachy_gazebo_grasp)/launch/spawn_camera.launch">
+  </include>
 
 <!-- We spawn the cube  -->
-    <!-- <include file="$(find reachy_gazebo_grasp)/launch/spawn_cube.launch">
-  </include> -->
+    <include file="$(find reachy_gazebo_grasp)/launch/spawn_cube.launch">
+  </include>
 
 
   <include file="$(find colab_reachy_tf)/launch/tf.launch">
@@ -37,6 +37,9 @@
 
   </include> 
 
+    <!-- <node pkg="reachy_gazebo_grasp" type="move_interface.py" name="move_arm_to_cube" respawn="false" output="screen"/> -->
+<node name="move_interface" pkg="reachy_gazebo_grasp" type="move_interface.py"
+	respawn="false" output="screen"/>
 
 <!-- We start the Apriltag tracking, taking note of the updated camera name and frame arg values. settings and tags have also been updated and are included in this package 
     <include file="$(find apriltag_ros)/launch/continuous_detection.launch">

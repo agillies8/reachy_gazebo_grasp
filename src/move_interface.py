@@ -122,7 +122,7 @@ class MoveGroupPythonInterfaceTutorial(object):
 
     #attempts to get the latest transform of the cube from world
     try:
-      trans = self.tfBuffer.lookup_transform('world', 'cube2', rospy.Time(0))
+      trans = self.tfBuffer.lookup_transform('pedestal', 'cube2', rospy.Time(0))
       cube_x = trans.transform.translation.x
       cube_y = trans.transform.translation.y
       cube_z = trans.transform.translation.z
@@ -139,12 +139,24 @@ class MoveGroupPythonInterfaceTutorial(object):
     #loops thru the detected tags, and filters based on our pre-specificed tag (tag 2 in this case)
     #this also fliters out cube poses that are roughly outside the robot arm workspace
     for a in msg.detections:
-      if a.id[0] == 2 and \
+      if a.id[0] == 'apriltag_5' and \
        0.0 < cube_x < 0.75 and \
       0.0 < cube_y < 0.75 and \
       0.3 < cube_z < 1.0 :
 
         #builds a pose goal based on the cube pose
+        # pose_Goal = geometry_msgs.msg.PoseStamped()
+        # frac, secs = math.modf(time.time())
+        # pose_Goal.header.stamp.secs = secs
+        # pose_Goal.header.stamp.nsecs = frac * pow(10, 9)
+        # pose_Goal.pose.position.x = x
+        # pose_Goal.pose.position.y = y
+        # pose_Goal.pose.position.z = z
+        # pose_Goal.pose.orientation.x = qx
+        # pose_Goal.pose.orientation.y = qy
+        # pose_Goal.pose.orientation.z = qz
+        # pose_Goal.pose.orientation.w = qw
+
         pose_goal = geometry_msgs.msg.Pose()
         pose_goal.position.x = cube_x 
         pose_goal.position.y = cube_y 
