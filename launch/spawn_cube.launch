@@ -21,7 +21,9 @@
 
     <!--this static TF publisher establises the offset between the cube center and the tag frame "2"-->
 
-    <node pkg="tf" type="static_transform_publisher" name="cube2_broadcaster" args=" 0 0 -0.0755 0 0 0 1 apriltag_5 cube2 100" />
+    <!-- <node pkg="tf" type="static_transform_publisher" name="cube2_broadcaster" args=" 0 0 -0.0755 0 0 0 1 apriltag_5 cube2 100" /> -->
+    <!-- Simulation -->
+    <node pkg="tf" type="static_transform_publisher" name="cube2_broadcaster" args=" 0 0 -0.0755 0 0 0 1 2 cube2 100" />
 
 
        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
