@@ -1,5 +1,6 @@
 <launch>
 
+
   <!-- We launch the core reachy model, rviz config and gazebo world from reachy moveit config (seperate ROS package)-->
   <include file="$(find reachy_moveit_config)/launch/demo_gazebo.launch">
     <arg name="urdf_path" value="$(find reachy_moveit_config)/urdf/reachy_moveit.urdf"/>
@@ -7,18 +8,27 @@
   </include>
 
   <!-- Spawn objects (camera and cube) -->
+  <!-- No need to populate it since the world alreay contains the objects -->
+  <!-- <include file="$(find reachy_gazebo_grasp)/launch/spawn_objects.launch">
+  </include> -->
 
-  <include file="$(find reachy_gazebo_grasp)/launch/spawn_objects.launch">
+
+
+
+  <!-- We spawn the camera -->
+  <include file="$(find reachy_gazebo_grasp)/launch/spawn_camera.launch">
   </include>
 
-  <!-- We spawn the camera
-
-  <include file="$(find reachy_gazebo_grasp)/launch/spawn_camera.launch">
-  </include>-->
-
-<!-- We spawn the cube 
+<!-- We spawn the cube  -->
     <include file="$(find reachy_gazebo_grasp)/launch/spawn_cube.launch">
-  </include>-->
+  </include>
+
+
+  <include file="$(find colab_reachy_tf)/launch/tf.launch">
+    <arg name="camera_device" value="/dev/video2" />
+    <arg name="use_rviz" value="false" />
+  </include> 
+
 
 <!-- We start the Apriltag tracking, taking note of the updated camera name and frame arg values. settings and tags have also been updated and are included in this package 
     <include file="$(find apriltag_ros)/launch/continuous_detection.launch">
@@ -29,10 +39,12 @@
         <arg name="tags_file" value ="$(find reachy_gazebo_grasp)/config/tags.yaml"/>
   </include>-->
 
-<!-- We start a node that subscribes to the Apriltag pose output and broadcasts the cube TF 
-<node name="tag_pose_tf" pkg="reachy_gazebo_grasp" type="tag_pose_sub.py"
+<!-- We start a node that subscribes to the Apriltag pose output and broadcasts the cube TF  -->
+<!-- <node name="tag_pose_tf" pkg="reachy_gazebo_grasp" type="tag_pose_sub.py"
 	respawn="false" output="screen">
 </node> -->
+
+
 
 <!-- We start a node that subscribes to the TF broadcast, and initiates a move_group command based on the cube pose 
 <node name="move_interface" pkg="reachy_gazebo_grasp" type="move_interface.py"

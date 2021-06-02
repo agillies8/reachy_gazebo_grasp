@@ -1252,7 +1252,7 @@
       <pose>0 0 0 0 -0 0</pose>
     </model>
     <model name='cube'>
-      <link name='cube'>
+      <link name='cube_link'>
         <inertial>
           <pose>0 0 0 0 -0 0</pose>
           <mass>0.05</mass>
@@ -1515,7 +1515,7 @@
       <model name='cube'>
         <pose>0.427287 -0.074861 0.597001 0.002669 0.000282 3.3e-05</pose>
         <scale>1 1 1</scale>
-        <link name='cube'>
+        <link name='cube_link'>
           <pose>0.427287 -0.074861 0.597001 0.002669 0.000282 3.3e-05</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>

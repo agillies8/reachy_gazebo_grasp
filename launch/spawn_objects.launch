@@ -27,7 +27,7 @@
             <arg name="pitch" value="0.0"/>
             <arg name="yaw" value="0.0" />
             <arg name="urdf_robot_file" value="$(find colab_reachy_approach)/urdf/cube.urdf" />
-            <arg name="frame_id" value="2" /> 
+            <arg name="frame_id" value="april_tag5" /> 
             <arg name="child_frame_id" value="camera_link" />
         </include>
     </group>

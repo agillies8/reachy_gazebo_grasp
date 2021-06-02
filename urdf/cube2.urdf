@@ -2,7 +2,6 @@
 <robot name="cube2">
 
   <!--<link name="world"/>
-
    <joint name="world_joint" type="float">
     <parent link="2"/>
     <child link="cube2"/>
