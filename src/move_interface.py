@@ -126,7 +126,7 @@ class MoveGroupPythonInterfaceTutorial(object):
 
     #attempts to get the latest transform of the cube from world
     try:
-      trans = self.tfBuffer.lookup_transform('cube2', 'pedestal',rospy.Time(0))
+      trans = self.tfBuffer.lookup_transform('pedestal', 'cube2',rospy.Time(0))
       cube_x = trans.transform.translation.x
       cube_y = trans.transform.translation.y
       cube_z = trans.transform.translation.z
