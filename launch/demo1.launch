@@ -2,9 +2,9 @@
   <!-- <arg name="simulation" default="true"/> -->
 
   <!-- We launch the core reachy model, rviz config and gazebo world from reachy moveit config (seperate ROS package)-->
-  <include file="$(find reachy_moveit_config)/launch/demo_gazebo.launch">
-    <arg name="urdf_path" value="$(find reachy_moveit_config)/urdf/reachy_moveit.urdf"/>
-    <arg name="rviz_config" value="$(find reachy_gazebo_grasp)/demo1.rviz"/>
+  <include file="$(find colab_reachy_control)/launch/moveit.launch">
+    <!-- <arg name="urdf_path" value="$(find reachy_moveit_config)/urdf/reachy_moveit.urdf"/>
+    <arg name="rviz_config" value="$(find reachy_gazebo_grasp)/demo1.rviz"/> -->
   </include>
 
   <!-- Spawn objects (camera and cube) -->
@@ -38,8 +38,8 @@
   </include> 
 
     <!-- <node pkg="reachy_gazebo_grasp" type="move_interface.py" name="move_arm_to_cube" respawn="false" output="screen"/> -->
-<node name="move_interface" pkg="reachy_gazebo_grasp" type="move_interface.py"
-	respawn="false" output="screen"/>
+<!-- <node name="move_interface" pkg="reachy_gazebo_grasp" type="move_interface.py"
+	respawn="false" output="screen"/> -->
 
 <!-- We start the Apriltag tracking, taking note of the updated camera name and frame arg values. settings and tags have also been updated and are included in this package 
     <include file="$(find apriltag_ros)/launch/continuous_detection.launch">
@@ -57,9 +57,9 @@
 
 
 
-<!-- We start a node that subscribes to the TF broadcast, and initiates a move_group command based on the cube pose 
+<!-- We start a node that subscribes to the TF broadcast, and initiates a move_group command based on the cube pose  -->
 <node name="move_interface" pkg="reachy_gazebo_grasp" type="move_interface.py"
 	respawn="false" output="screen">
-</node> -->
+</node>
 
 </launch>

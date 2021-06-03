@@ -1,5 +1,6 @@
 #!/usr/bin/env python3  
-
+import math
+import time
 import tf2_ros
 import sys
 import copy
@@ -75,7 +76,7 @@ class MoveGroupPythonInterfaceTutorial(object):
 
     ## Create a `DisplayTrajectory`_ ROS publisher which is used to display
     ## trajectories in Rviz:
-    display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
+    display_trajectory_publisher = rospy.Publisher('/display_planned_path',
                                                    moveit_msgs.msg.DisplayTrajectory,
                                                    queue_size=20)
 
@@ -116,34 +117,66 @@ class MoveGroupPythonInterfaceTutorial(object):
 
     #initialize cube position and looping rate
     rate = rospy.Rate(10.0)
+    rate2 = rospy.Rate(1)
     cube_x = 0
     cube_y = 0
     cube_z = 0
 
+    rate2.sleep()
+
     #attempts to get the latest transform of the cube from world
     try:
-      trans = self.tfBuffer.lookup_transform('pedestal', 'cube2', rospy.Time(0))
+      trans = self.tfBuffer.lookup_transform('cube2', 'pedestal',rospy.Time(0))
       cube_x = trans.transform.translation.x
       cube_y = trans.transform.translation.y
       cube_z = trans.transform.translation.z
+      # cube_r_x = trans.transform.rotation.x
+      # cube_r_y = trans.transform.rotation.y
+      # cube_r_z = trans.transform.rotation.z
+      # cube_r_w = trans.transform.rotation.w
+      q = quaternion_from_euler(math.radians(0), math.radians(-90), math.radians(-45))
       
+      cube_r_x =  q[0]
+      cube_r_y = q[1]
+      cube_r_z = q[2]
+      cube_r_w = q[3]
+
     except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
       rate.sleep()
 
     #prints the detected coordinates of the cube
-    print("x")
-    print(cube_x)
-    print(cube_y)
-    print(cube_z)
+    # print("x")
+    # print(cube_x,cube_y,cube_z)
+    # print("***************************************************************************")
+
+    # rightEulerAngles = euler_from_quaternion([
+    #         cube_r_x,
+    #         cube_r_y,
+    #         cube_r_z,
+    #         cube_r_w])
+    # r_ex = math.degrees(rightEulerAngles[0])
+    # r_ey = math.degrees(rightEulerAngles[1])
+    # r_ez = math.degrees(rightEulerAngles[2])
+    
+    print("-------------------------------------------------------------")
+    # print(f"{r_ex},{r_ey},{r_ez}")
+    
+    # print("-------------------------------------------------------------")
+    
+    # print(cube_y)
+    # print(cube_z)
+# rostopic pub -1 /move_to_goal_topic/euler reachy_ros_moveit/move_to_goal_euler 
+# "{ side: 'left', pos_x: 0.4, pos_y: 0.25, pos_z: 0.75, euler_x: 0.0, euler_y: -90.0, euler_z: -45.0, order: 'xyz' }"
 
     #loops thru the detected tags, and filters based on our pre-specificed tag (tag 2 in this case)
     #this also fliters out cube poses that are roughly outside the robot arm workspace
     for a in msg.detections:
-      if a.id[0] == 'apriltag_5' and \
-       0.0 < cube_x < 0.75 and \
-      0.0 < cube_y < 0.75 and \
-      0.3 < cube_z < 1.0 :
-
+      # print(a)
+      if a.id[0] == 5:
+      # and \
+      #  0.0 < cube_x < 0.75 and \
+      # 0.0 < cube_y < 0.75 and \
+      # 0.3 < cube_z < 1.0 :
         #builds a pose goal based on the cube pose
         # pose_Goal = geometry_msgs.msg.PoseStamped()
         # frac, secs = math.modf(time.time())
@@ -157,23 +190,32 @@ class MoveGroupPythonInterfaceTutorial(object):
         # pose_Goal.pose.orientation.z = qz
         # pose_Goal.pose.orientation.w = qw
 
-        pose_goal = geometry_msgs.msg.Pose()
-        pose_goal.position.x = cube_x 
-        pose_goal.position.y = cube_y 
-        pose_goal.position.z = cube_z   + 0.15
+        pose_goal = geometry_msgs.msg.PoseStamped()
+        # # frac, secs = math.modf(time.time())
+        # # pose_goal.header.stamp.secs = secs
+        # # pose_goal.header.stamp.nsecs = frac * pow(10, 9)
+        pose_goal.pose.position.x = cube_x 
+        pose_goal.pose.position.y = cube_y 
+        pose_goal.pose.position.z = cube_z   + 0.15
 
-        quat = quaternion_from_euler (0.0, -1.3,0.1)
+        # # quat = quaternion_from_euler (0.0, -1.3,0.1)
 
-        pose_goal.orientation.x = quat[0]
-        pose_goal.orientation.y = quat[1]
-        pose_goal.orientation.z = quat[2]
-        pose_goal.orientation.w = quat[3]
+        # pose_goal.orientation.x = quat[0]
+        # pose_goal.orientation.y = quat[1]
+        # pose_goal.orientation.z = quat[2]
+        # pose_goal.orientation.w = quat[3]
+        pose_goal.pose.orientation.x = cube_r_x
+        pose_goal.pose.orientation.y = cube_r_y
+        pose_goal.pose.orientation.z = cube_r_z
+        pose_goal.pose.orientation.w = cube_r_w
 
         self.move_group.set_pose_target(pose_goal)
 
         ## Now, we call the planner to compute the plan and execute it.
         print("Executing motion")
+        # print(pose_goal)
         plan = self.move_group.go(wait=True)
+
         # Calling `stop()` ensures that there is no residual movement
         self.move_group.stop()
         # It is always good to clear your targets after planning with poses.
@@ -184,7 +226,7 @@ class MoveGroupPythonInterfaceTutorial(object):
 def main():
   try:
     tutorial = MoveGroupPythonInterfaceTutorial()
-    rospy.Subscriber('tag_detections',
+    rospy.Subscriber('/tag_detections',
                      AprilTagDetectionArray,
                      tutorial.go_to_pose_goal)
     rospy.spin()
