@@ -12,9 +12,6 @@
   <!-- <include file="$(find reachy_gazebo_grasp)/launch/spawn_objects.launch">
   </include> -->
 
-
-
-
   <!-- We spawn the camera -->
   <include file="$(find reachy_gazebo_grasp)/launch/spawn_camera.launch">
   </include>
