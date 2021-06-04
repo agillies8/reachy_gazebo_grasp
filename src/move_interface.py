@@ -96,6 +96,12 @@ class MoveGroupPythonInterfaceTutorial(object):
     group_names = robot.get_group_names()
     print("============ Available Planning Groups:", robot.get_group_names())
 
+    print ("----------- Current Joint Values:")
+    print (group.get_current_joint_values())
+
+    print ("------------- Current Pose:")
+    print (group.get_current_pose())
+
     # Sometimes for debugging it is useful to print the entire state of the
     # robot:
     print("============ Printing robot state")
@@ -132,12 +138,12 @@ class MoveGroupPythonInterfaceTutorial(object):
       cube_x = trans.transform.translation.x
       cube_y = trans.transform.translation.y
       cube_z = trans.transform.translation.z
-      q = quaternion_from_euler(math.radians(0), math.radians(-90), math.radians(-45))
+      # q = quaternion_from_euler(math.radians(0), math.radians(-90), math.radians(-45))
       
-      cube_r_x =  q[0]
-      cube_r_y = q[1]
-      cube_r_z = q[2]
-      cube_r_w = q[3]
+      # cube_r_x = q[0]
+      # cube_r_y = q[1]
+      # cube_r_z = q[2]
+      # cube_r_w = q[3]
 
     except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
       rate.sleep()
