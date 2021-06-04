@@ -76,9 +76,11 @@ class MoveGroupPythonInterfaceTutorial(object):
 
     ## Create a `DisplayTrajectory`_ ROS publisher which is used to display
     ## trajectories in Rviz:
-    display_trajectory_publisher = rospy.Publisher('/display_planned_path',
+    display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
                                                    moveit_msgs.msg.DisplayTrajectory,
                                                    queue_size=20)
+                                                  # NOTE: Ed's code didn't have /move_group
+                                                
 
     ## Getting Basic Information
     ## ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -130,10 +132,6 @@ class MoveGroupPythonInterfaceTutorial(object):
       cube_x = trans.transform.translation.x
       cube_y = trans.transform.translation.y
       cube_z = trans.transform.translation.z
-      # cube_r_x = trans.transform.rotation.x
-      # cube_r_y = trans.transform.rotation.y
-      # cube_r_z = trans.transform.rotation.z
-      # cube_r_w = trans.transform.rotation.w
       q = quaternion_from_euler(math.radians(0), math.radians(-90), math.radians(-45))
       
       cube_r_x =  q[0]
@@ -189,25 +187,35 @@ class MoveGroupPythonInterfaceTutorial(object):
         # pose_Goal.pose.orientation.y = qy
         # pose_Goal.pose.orientation.z = qz
         # pose_Goal.pose.orientation.w = qw
+        pose_goal = geometry_msgs.msg.Pose()
+        pose_goal.position.x = cube_x 
+        pose_goal.position.y = cube_y 
+        pose_goal.position.z = cube_z   + 0.15
 
-        pose_goal = geometry_msgs.msg.PoseStamped()
-        # # frac, secs = math.modf(time.time())
-        # # pose_goal.header.stamp.secs = secs
-        # # pose_goal.header.stamp.nsecs = frac * pow(10, 9)
-        pose_goal.pose.position.x = cube_x 
-        pose_goal.pose.position.y = cube_y 
-        pose_goal.pose.position.z = cube_z   + 0.15
+        quat = quaternion_from_euler (0.0, -1.3,0.1)
 
-        # # quat = quaternion_from_euler (0.0, -1.3,0.1)
+        pose_goal.orientation.x = quat[0]
+        pose_goal.orientation.y = quat[1]
+        pose_goal.orientation.z = quat[2]
+        pose_goal.orientation.w = quat[3]
+        # pose_goal = geometry_msgs.msg.PoseStamped()
+        # # # frac, secs = math.modf(time.time())
+        # # # pose_goal.header.stamp.secs = secs
+        # # # pose_goal.header.stamp.nsecs = frac * pow(10, 9)
+        # pose_goal.pose.position.x = cube_x 
+        # pose_goal.pose.position.y = cube_y 
+        # pose_goal.pose.position.z = cube_z   + 0.15
 
-        # pose_goal.orientation.x = quat[0]
-        # pose_goal.orientation.y = quat[1]
-        # pose_goal.orientation.z = quat[2]
-        # pose_goal.orientation.w = quat[3]
-        pose_goal.pose.orientation.x = cube_r_x
-        pose_goal.pose.orientation.y = cube_r_y
-        pose_goal.pose.orientation.z = cube_r_z
-        pose_goal.pose.orientation.w = cube_r_w
+        # # # quat = quaternion_from_euler (0.0, -1.3,0.1)
+
+        # # pose_goal.orientation.x = quat[0]
+        # # pose_goal.orientation.y = quat[1]
+        # # pose_goal.orientation.z = quat[2]
+        # # pose_goal.orientation.w = quat[3]
+        # pose_goal.pose.orientation.x = cube_r_x
+        # pose_goal.pose.orientation.y = cube_r_y
+        # pose_goal.pose.orientation.z = cube_r_z
+        # pose_goal.pose.orientation.w = cube_r_w
 
         self.move_group.set_pose_target(pose_goal)
 
