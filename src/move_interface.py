@@ -145,7 +145,7 @@ class MoveGroupPythonInterfaceTutorial(object):
       # print(a)
       # rospy.loginfo(a)
       if a.id[0] == 5:
-      
+      # testsing
         pose_goal = geometry_msgs.msg.Pose()
         pose_goal.position.x = cube_x 
         pose_goal.position.y = cube_y 
