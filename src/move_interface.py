@@ -143,7 +143,7 @@ class MoveGroupPythonInterfaceTutorial(object):
 
     for a in msg.detections:
       # print(a)
-      rospy.loginfo(a)
+      # rospy.loginfo(a)
       if a.id[0] == 5:
       
         pose_goal = geometry_msgs.msg.Pose()
@@ -151,7 +151,13 @@ class MoveGroupPythonInterfaceTutorial(object):
         pose_goal.position.y = cube_y 
         pose_goal.position.z = cube_z   + 0.15
 
-        quat = quaternion_from_euler (0.0, -1.3,0.1)
+        quat = quaternion_from_euler (0.0, -1.57, 0.0)
+
+        # x = -0.0056591
+        # y = -0.69491
+        # z = 0.003419
+        # w = 0.71907
+        # m = math.sqrt(x**2 + y**2 + z**2)
 
         pose_goal.orientation.x = quat[0]
         pose_goal.orientation.y = quat[1]

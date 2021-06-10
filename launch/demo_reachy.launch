@@ -13,8 +13,6 @@
     <include file="$(find reachy_gazebo_grasp)/launch/spawn_cube.launch">
   </include>
 
-
-
   <include file="$(find colab_reachy_tf)/launch/tf.launch">
     <arg name="camera_device" value="/dev/video2" />
     <arg name="use_rviz" value="false" />
