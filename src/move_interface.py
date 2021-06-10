@@ -149,7 +149,7 @@ class MoveGroupPythonInterfaceTutorial(object):
         pose_goal = geometry_msgs.msg.Pose()
         pose_goal.position.x = cube_x 
         pose_goal.position.y = cube_y 
-        pose_goal.position.z = cube_z   + 0.15
+        pose_goal.position.z = cube_z   + 0.145
 
         quat = quaternion_from_euler (0.0, -1.57, 0.0)
 
