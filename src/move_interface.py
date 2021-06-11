@@ -118,17 +118,21 @@ class MoveGroupPythonInterfaceTutorial(object):
     self.tfBuffer = tf2_ros.Buffer()
     self.listener = tf2_ros.TransformListener(self.tfBuffer)
 
-  def go_to_pose_goal(self, msg):
+  # def execute_to_goal(self, msg):
+  #   appraoch_to_goal(self, msg)
+  #   go_to_pose_goal(self, msg)
 
+  def go_to_pose_goal(self, msg):
+    
     #initialize cube position and looping rate
-    rate = rospy.Rate(10.0)
-    rate2 = rospy.Rate(1)
+    rate = rospy.Rate(5.0)
+    # rate2 = rospy.Rate(1)
     cube_x = 0
     cube_y = 0
     cube_z = 0
 
 
-    rate2.sleep()
+    # rate2.sleep()
     #attempts to get the latest transform of the cube from world
     try:
       trans = self.tfBuffer.lookup_transform('pedestal', 'cube2',rospy.Time(0))
@@ -142,22 +146,16 @@ class MoveGroupPythonInterfaceTutorial(object):
 
 
     for a in msg.detections:
-      # print(a)
-      # rospy.loginfo(a)
+
       if a.id[0] == 5:
-      # testsing
+    
         pose_goal = geometry_msgs.msg.Pose()
-        pose_goal.position.x = cube_x 
+        pose_goal.position.x = cube_x  - 0.07
         pose_goal.position.y = cube_y 
         pose_goal.position.z = cube_z   + 0.145
 
         quat = quaternion_from_euler (0.0, -1.57, 0.0)
 
-        # x = -0.0056591
-        # y = -0.69491
-        # z = 0.003419
-        # w = 0.71907
-        # m = math.sqrt(x**2 + y**2 + z**2)
 
         pose_goal.orientation.x = quat[0]
         pose_goal.orientation.y = quat[1]
@@ -165,7 +163,8 @@ class MoveGroupPythonInterfaceTutorial(object):
         pose_goal.orientation.w = quat[3]
        
         self.move_group.set_pose_target(pose_goal)
-
+        rospy.loginfo("approach")
+        rospy.loginfo(pose_goal)
         ## Now, we call the planner to compute the plan and execute it.
         print("Executing motion")
         # print(pose_goal)
@@ -176,6 +175,90 @@ class MoveGroupPythonInterfaceTutorial(object):
         # It is always good to clear your targets after planning with poses.
         # Note: there is no equivalent function for clear_joint_value_targets()
         self.move_group.clear_pose_targets()
+
+
+        rate.sleep()
+        rospy.loginfo("GOING TO THE CUBE NOW")
+
+
+        pose_goal = geometry_msgs.msg.Pose()
+        pose_goal.position.x = cube_x + 0.06
+        pose_goal.position.y = cube_y 
+        pose_goal.position.z = cube_z   + 0.145
+
+
+        quat = quaternion_from_euler (0.0, -1.57, 0.0)
+
+
+        pose_goal.orientation.x = quat[0]
+        pose_goal.orientation.y = quat[1]
+        pose_goal.orientation.z = quat[2]
+        pose_goal.orientation.w = quat[3]
+
+        rospy.loginfo("graasp")
+        rospy.loginfo(pose_goal)
+        self.move_group.set_pose_target(pose_goal)
+
+        plan = self.move_group.go(wait=True)
+        self.move_group.stop()
+        self.move_group.clear_pose_targets()
+
+
+
+
+
+  # def approach_to_goal(self, msg):
+
+  #   #initialize cube position and looping rate
+  #   rate = rospy.Rate(10.0)
+  #   # rate2 = rospy.Rate(1)
+  #   cube_x = 0
+  #   cube_y = 0
+  #   cube_z = 0
+
+
+  #   # rate2.sleep()
+  #   #attempts to get the latest transform of the cube from world
+  #   try:
+  #     trans = self.tfBuffer.lookup_transform('pedestal', 'cube2',rospy.Time(0))
+  #     cube_x = trans.transform.translation.x
+  #     cube_y = trans.transform.translation.y
+  #     cube_z = trans.transform.translation.z
+  #     # print(cube_x,cube_y,cube_z)
+
+  #   except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
+  #     rate.sleep()
+
+
+  #   for a in msg.detections:
+
+  #     if a.id[0] == 5:
+    
+  #       pose_goal = geometry_msgs.msg.Pose()
+  #       pose_goal.position.x = cube_x  - 0.05
+  #       pose_goal.position.y = cube_y 
+  #       pose_goal.position.z = cube_z   + 0.145
+
+  #       quat = quaternion_from_euler (0.0, -1.57, 0.0)
+
+
+  #       pose_goal.orientation.x = quat[0]
+  #       pose_goal.orientation.y = quat[1]
+  #       pose_goal.orientation.z = quat[2]
+  #       pose_goal.orientation.w = quat[3]
+       
+  #       self.move_group.set_pose_target(pose_goal)
+
+  #       ## Now, we call the planner to compute the plan and execute it.
+  #       print("Executing motion")
+  #       # print(pose_goal)
+  #       plan = self.move_group.go(wait=True)
+
+  #       # Calling `stop()` ensures that there is no residual movement
+  #       self.move_group.stop()
+  #       # It is always good to clear your targets after planning with poses.
+  #       # Note: there is no equivalent function for clear_joint_value_targets()
+  #       self.move_group.clear_pose_targets()
 
 #we start the node by initializing our move group interface object, and creating a subscriber that listens to the tag detections topic
 def main():
@@ -189,6 +272,7 @@ def main():
   except rospy.ROSInterruptException:
     return
   except KeyboardInterrupt:
+    # plan the arm to left_arm rest and then release the arm
     return
 
 if __name__ == '__main__':
