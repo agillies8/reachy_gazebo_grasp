@@ -23,9 +23,9 @@
     <arg name="use_rviz" value="false" />
   </include> 
 
-    <!-- <node pkg="reachy_gazebo_grasp" type="move_interface.py" name="move_arm_to_cube" respawn="false" output="screen"/> -->
-<!-- <node name="move_interface" pkg="reachy_gazebo_grasp" type="move_interface.py"
-	respawn="false" output="screen"/> -->
+    <node pkg="reachy_gazebo_grasp" type="move_interface.py" name="move_arm_to_cube" respawn="false" output="screen"/> -->
+    <node name="move_interface" pkg="reachy_gazebo_grasp" type="move_interface.py"
+	respawn="false" output="screen"/>
 
 
 </launch>
