@@ -218,59 +218,6 @@ class MoveGroupPythonInterfaceTutorial(object):
 
 
 
-    # def approach_to_goal(self, msg):
-
-    #   #initialize cube position and looping rate
-    #   rate = rospy.Rate(10.0)
-    #   # rate2 = rospy.Rate(1)
-    #   cube_x = 0
-    #   cube_y = 0
-    #   cube_z = 0
-
-
-    #   # rate2.sleep()
-    #   #attempts to get the latest transform of the cube from world
-    #   try:
-    #     trans = self.tfBuffer.lookup_transform('pedestal', 'cube2',rospy.Time(0))
-    #     cube_x = trans.transform.translation.x
-    #     cube_y = trans.transform.translation.y
-    #     cube_z = trans.transform.translation.z
-    #     # print(cube_x,cube_y,cube_z)
-
-    #   except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
-    #     rate.sleep()
-
-
-    #   for a in msg.detections:
-
-    #     if a.id[0] == 5:
-
-    #       pose_goal = geometry_msgs.msg.Pose()
-    #       pose_goal.position.x = cube_x  - 0.05
-    #       pose_goal.position.y = cube_y
-    #       pose_goal.position.z = cube_z   + 0.145
-
-    #       quat = quaternion_from_euler (0.0, -1.57, 0.0)
-
-
-    #       pose_goal.orientation.x = quat[0]
-    #       pose_goal.orientation.y = quat[1]
-    #       pose_goal.orientation.z = quat[2]
-    #       pose_goal.orientation.w = quat[3]
-
-    #       self.move_group.set_pose_target(pose_goal)
-
-    #       ## Now, we call the planner to compute the plan and execute it.
-    #       print("Executing motion")
-    #       # print(pose_goal)
-    #       plan = self.move_group.go(wait=True)
-
-    #       # Calling `stop()` ensures that there is no residual movement
-    #       self.move_group.stop()
-    #       # It is always good to clear your targets after planning with poses.
-    #       # Note: there is no equivalent function for clear_joint_value_targets()
-    #       self.move_group.clear_pose_targets()
-
     def grasping_state_init(self):
         self._min_approach_error = 0.01     # TODO: determine a suitable minimum approach pose error
         self._min_grip_error = 0.005        # TODO: determine a suitable minimum grip pose error
@@ -358,7 +305,7 @@ class MoveGroupPythonInterfaceTutorial(object):
     def approach_pose(self):
         local_pose = None
         with self._approach_pose_mutex:
-            local_pose = self._approach_pose_mutex
+            local_pose = self._approach_pose
         return local_pose
 
     @approach_pose.setter
@@ -370,7 +317,7 @@ class MoveGroupPythonInterfaceTutorial(object):
     def grasp_pose(self):
         local_pose = None
         with self._grasp_pose_mutex:
-            local_pose = self._grasp_pose_mutex
+            local_pose = self._grasp_pose
         return local_pose
 
     @grasp_pose.setter
