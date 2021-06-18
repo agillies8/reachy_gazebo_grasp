@@ -141,9 +141,9 @@ class MoveGroupPythonInterfaceTutorial(object):
         #attempts to get the latest transform of the cube from world
         try:
             trans = self.tfBuffer.lookup_transform('pedestal', 'cube2',rospy.Time(0))
-            cube_x = trans.transform.translation.x
-            cube_y = trans.transform.translation.y
-            cube_z = trans.transform.translation.z
+            # cube_x = trans.transform.translation.x
+            # cube_y = trans.transform.translation.y
+            # cube_z = trans.transform.translation.z
             # print(cube_x,cube_y,cube_z)
 
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
@@ -222,6 +222,18 @@ class MoveGroupPythonInterfaceTutorial(object):
         self._min_approach_error = 0.01     # TODO: determine a suitable minimum approach pose error
         self._min_grip_error = 0.005        # TODO: determine a suitable minimum grip pose error
         self._max_grip_load = 0.2
+        
+        # ADDED BY LIAM
+        self._approach_x_offset = 0.07
+        self._approach_y_offset = 0.0
+        self._approach_z_offset = 0.145
+
+        self._grasp_x_offset = 0.06
+        self._grasp_y_offset = 0.0
+        self._grasp_z_offset = 0.145
+
+        # ADDED BY LIAM
+
         self._settings_mutex = Lock()
 
         self._grip_load = 0.0
@@ -264,6 +276,86 @@ class MoveGroupPythonInterfaceTutorial(object):
     def min_grip_error(self, val):
         with self._settings_mutex:
             self._min_grip_error = val
+
+
+    #ADDED BY LIAM
+    @property
+    def approach_x_offset(self):
+        local_val = 0
+        with self._settings_mutex:
+            local_val = self._approach_x_offset
+        return local_val
+
+    @approach_x_offset.setter
+    def approach_x_offset(self, val):
+        with self._settings_mutex:
+            self._approach_x_offset = val
+
+    @property
+    def approach_y_offset(self):
+        local_val = 0
+        with self._settings_mutex:
+            local_val = self._approach_y_offset
+        return local_val
+
+    @approach_y_offset.setter
+    def approach_y_offset(self, val):
+        with self._settings_mutex:
+            self._approach_y_offset = val
+    
+    @property       
+    def approach_z_offset(self):
+        local_val = 0
+        with self._settings_mutex:
+            local_val = self._approach_z_offset
+        return local_val
+
+    @approach_z_offset.setter
+    def approach_z_offset(self, val):
+        with self._settings_mutex:
+            self._approach_z_offset = val
+
+    @property
+    def grasp_x_offset(self):
+        local_val = 0
+        with self._settings_mutex:
+            local_val = self._grasp_x_offset
+        return local_val
+
+    @grasp_x_offset.setter
+    def grasp_x_offset(self, val):
+        with self._settings_mutex:
+            self._grasp_x_offset = val
+
+    @property
+    def grasp_y_offset(self):
+        local_val = 0
+        with self._settings_mutex:
+            local_val = self._grasp_y_offset
+        return local_val
+
+    @grasp_y_offset.setter
+    def grasp_y_offset(self, val):
+        with self._settings_mutex:
+            self._grasp_y_offset = val
+
+    @property
+    def grasp_z_offset(self):
+        local_val = 0
+        with self._settings_mutex:
+            local_val = self._grasp_z_offset
+        return local_val
+
+    @grasp_z_offset.setter
+    def grasp_z_offset(self, val):
+        with self._settings_mutex:
+            self._grasp_z_offset = val
+    #ADDED BY LIAM
+
+    @property
+    def get_cube_pose(self):
+        
+
 
     @property
     def max_grip_load(self):
@@ -342,10 +434,29 @@ class MoveGroupPythonInterfaceTutorial(object):
             self._current_pose = val
     '''
 
+
+# trans = self.tfBuffer.lookup_transform('pedestal', 'cube2',rospy.Time(0))
+#             cube_x = trans.transform.translation.x
+#             cube_y = trans.transform.translation.y
+#             cube_z = trans.transform.translation.z
+
+
+#                 pose_goal = geometry_msgs.msg.Pose()
+#                 pose_goal.position.x = cube_x + 0.06
+#                 pose_goal.position.y = cube_y
+#                 pose_goal.position.z = cube_z   + 0.145
+
+
     def calc_approach_pose(self, cube_pose):
         best_pose = geometry_msgs.msg.Pose()
 
         # TODO: Calculate the approach pose given the cube pose pose
+
+        # ADDED BY LIAM
+        best_pose.position.x = cube_pose.position.x + self.approach_x_offset
+        best_pose.position.y = cube_pose.position.y + self.approach_y_offset
+        best_pose.position.z = cube_pose.position.z + self.approach_z_offset
+        # ADDED BY LIAM
 
         return best_pose
 
@@ -353,6 +464,12 @@ class MoveGroupPythonInterfaceTutorial(object):
         best_pose = geometry_msgs.msg.Pose()
 
         # TODO: Calculate the grasp pose given the cube pose
+        
+        # ADDED BY LIAM
+        best_pose.position.x = cube_pose.position.x + self.grasp_x_offset
+        best_pose.position.y = cube_pose.position.y + self.grasp_y_offset
+        best_pose.position.z = cube_pose.position.z + self.grasp_z_offset
+        # ADDED BY LIAM
 
         return best_pose
 
